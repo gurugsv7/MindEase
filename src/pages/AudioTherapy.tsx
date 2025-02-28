@@ -25,7 +25,7 @@ const AudioTherapy: React.FC = () => {
   const languageContent = {
     english: {
       placeholder: "Type your message here...",
-      welcomeMessage: "Hello! How are you feeling today?",
+      welcomeMessage: "Hello! How are you feeling today? I can offer support and suggest helpful resources for whatever you're experiencing.",
       sendButton: "Send",
       loadingText: "Thinking...",
       listeningText: "Listening...",
@@ -33,7 +33,7 @@ const AudioTherapy: React.FC = () => {
     },
     hindi: {
       placeholder: "अपना संदेश यहां टाइप करें...",
-      welcomeMessage: "नमस्ते! आज आप कैसा महसूस कर रहे हैं?",
+      welcomeMessage: "नमस्ते! आज आप कैसा महसूस कर रहे हैं? मैं आपको सहायता और आपके अनुभव के लिए उपयोगी संसाधनों का सुझाव दे सकता हूं।",
       sendButton: "भेजें",
       loadingText: "सोच रहा हूँ...",
       listeningText: "सुन रहा हूँ...",
@@ -41,7 +41,7 @@ const AudioTherapy: React.FC = () => {
     },
     tamil: {
       placeholder: "உங்கள் செய்தியை இங்கே தட்டச்சு செய்யவும்...",
-      welcomeMessage: "வணக்கம்! இன்று நீங்கள் எப்படி உணருகிறீர்கள்?",
+      welcomeMessage: "வணக்கம்! இன்று நீங்கள் எப்படி உணருகிறீர்கள்? நான் உங்களுக்கு ஆதரவை வழங்க முடியும் மற்றும் உங்கள் அனுபவத்திற்கு பயனுள்ள வளங்களை பரிந்துரைக்க முடியும்.",
       sendButton: "அனுப்பு",
       loadingText: "யோசிக்கிறேன்...",
       listeningText: "கேட்கிறேன்...",
@@ -65,13 +65,13 @@ const AudioTherapy: React.FC = () => {
       
       switch (language) {
         case 'hindi':
-          systemPrompt = "आप मानसिक स्वास्थ्य सहायक हैं। कृपया हिंदी में संक्षिप्त उत्तर दें (1-3 वाक्य)। सहानुभूतिपूर्ण रहें और अक्सर प्रश्न पूछें। उपयोगकर्ता को आगे बात करने के लिए प्रोत्साहित करें।";
+          systemPrompt = "आप मानसिक स्वास्थ्य सहायक हैं। कृपया हिंदी में संक्षिप्त उत्तर दें (2-3 वाक्य)। सहानुभूतिपूर्ण रहें और उपयोगकर्ता को आगे बात करने के लिए प्रोत्साहित करें। उपयोगकर्ता द्वारा व्यक्त की गई समस्या के आधार पर, उपयुक्त पुस्तक, ऐप, या व्यायाम का सुझाव दें। उदाहरण के लिए: चिंता के लिए 'चिंता मुक्त जीवन' पुस्तक, अवसाद के लिए 'मन की शांति' ऐप, या तनाव के लिए श्वास व्यायाम का सुझाव दे सकते हैं।";
           break;
         case 'tamil':
-          systemPrompt = "நீங்கள் மன நல உதவியாளர். தயவுசெய்து தமிழில் சுருக்கமான பதில்களை வழங்கவும் (1-3 வாக்கியங்கள்). அனுதாபத்துடன் இருங்கள் மற்றும் அடிக்கடி கேள்விகளைக் கேட்கவும். பயனரை மேலும் பேச ஊக்குவிக்கவும்.";
+          systemPrompt = "நீங்கள் மன நல உதவியாளர். தயவுசெய்து தமிழில் சுருக்கமான பதில்களை வழங்கவும் (2-3 வாக்கியங்கள்). அனுதாபத்துடன் இருங்கள் மற்றும் பயனரை மேலும் பேச ஊக்குவிக்கவும். பயனர் குறிப்பிடும் பிரச்சனையின் அடிப்படையில், பொருத்தமான புத்தகம், செயலி அல்லது பயிற்சியை பரிந்துரைக்கவும். எடுத்துக்காட்டாக: பதற்றத்திற்கு 'அமைதியான மனம்' புத்தகம், மன அழுத்தத்திற்கு 'மனநல நலன்' செயலி, அல்லது மன அழுத்தத்திற்கு சுவாசப் பயிற்சிகளைப் பரிந்துரைக்கலாம்.";
           break;
         default:
-          systemPrompt = "You are a mental health assistant. Provide very short, clear responses (1-3 sentences) in English. Be empathetic and ask follow-up questions frequently. Encourage the user to elaborate.";
+          systemPrompt = "You are a mental health assistant for students. Provide concise responses (2-3 sentences) in English. Be empathetic and encourage the user to elaborate. Based on the issue they express, suggest one appropriate resource (book, app, or exercise). Examples: For anxiety, recommend 'The Anxiety and Worry Workbook' by Clark and Beck; for depression, suggest the 'Headspace' meditation app; for stress, recommend the 5-4-3-2-1 grounding exercise. Always ask a follow-up question to better understand their situation.";
       }
       
       const response = await axios.post(
@@ -310,7 +310,7 @@ const AudioTherapy: React.FC = () => {
      }
   };
 
-  // Text-to-speech function
+  // Text-to-speech function with auto mic activation
   const playAudio = (messageText: string) => {
     if (!messageText) return;
     
@@ -337,7 +337,30 @@ const AudioTherapy: React.FC = () => {
       utterance.rate = 1.0; // Normal speed for English
     }
     
-    utterance.onend = () => setIsPlaying(false);
+    // When the speech ends, activate microphone if auto-speak is on
+    utterance.onend = () => {
+      setIsPlaying(false);
+      
+      // Activate microphone after speech ends with a short delay
+      if (autoSpeak && !isLoading) {
+        console.log('Speech finished, activating microphone in 800ms');
+        setTimeout(() => {
+          if (!isListening && hasMicPermission !== false) {
+            console.log('Starting speech recognition after TTS completed');
+            // Start speech recognition
+            try {
+              shouldRestartRecognitionRef.current = true;
+              if (recognitionRef.current) {
+                recognitionRef.current.start();
+              }
+            } catch (e) {
+              console.error("Failed to start recognition after TTS:", e);
+            }
+          }
+        }, 800);
+      }
+    };
+    
     utterance.onerror = () => setIsPlaying(false);
     
     window.speechSynthesis.speak(utterance);
@@ -562,6 +585,24 @@ const AudioTherapy: React.FC = () => {
               </div>
               <h3 className="font-medium text-gray-800 mb-2">Accessibility</h3>
               <p className="text-sm text-gray-600">Text-to-speech features make therapy accessible to everyone</p>
+            </div>
+          </div>
+        </div>
+
+        {/* New Disclaimer section */}
+        <div className="mt-4 bg-yellow-50 p-4 rounded-xl shadow-sm border border-yellow-200">
+          <div className="flex items-start">
+            <div className="mr-3 mt-0.5">
+              <AlertCircle size={20} className="text-yellow-500" />
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-yellow-800">Important Note</h3>
+              <p className="mt-1 text-sm text-yellow-700">
+                The resources suggested by this assistant are for informational purposes only and 
+                not a substitute for professional mental health treatment. If you're experiencing 
+                a mental health emergency, please contact emergency services or a mental health 
+                professional immediately.
+              </p>
             </div>
           </div>
         </div>

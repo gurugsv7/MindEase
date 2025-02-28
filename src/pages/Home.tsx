@@ -75,7 +75,7 @@ const Home: React.FC = () => {
                   ))}
                 </div>
                 <p className="text-sm text-gray-600">
-                  <span className="font-semibold">1,000+</span> people joined this week
+                  <span className="font-semibold">10</span> people joined this week
                 </p>
               </div>
             </motion.div>
@@ -191,32 +191,6 @@ const Home: React.FC = () => {
               </motion.div>
             ))}
           </motion.div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { value: "10,000+", label: "Active Users" },
-              { value: "24/7", label: "AI Support" },
-              { value: "50+", label: "Professional Therapists" },
-              { value: "3", label: "Languages Supported" }
-            ].map((stat, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="p-6 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50"
-              >
-                <p className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">{stat.value}</p>
-                <p className="text-gray-600 mt-2">{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 

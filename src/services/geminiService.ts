@@ -1,6 +1,6 @@
 import axios from 'axios';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Use a more TypeScript-friendly way to access the API key
 const API_KEY = import.meta.env?.VITE_GEMINI_API_KEY || 
                (typeof window !== "undefined" && (window as any)._env_?.REACT_APP_GEMINI_API_KEY) || 
                'AIzaSyDW3yJZn-XldiU3iYL-beZQsmOC10dTr8Q'; // Fallback to the key you provided
@@ -14,7 +14,6 @@ export interface Message {
 
 export async function getGeminiResponse(messages: Message[]): Promise<string> {
   try {
-    // Format messages for Gemini API
     const formattedMessages = messages.map(msg => ({
       role: msg.role === 'model' ? 'model' : 'user',
       parts: [{ text: msg.content }]
